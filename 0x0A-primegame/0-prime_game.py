@@ -1,86 +1,56 @@
-#!/usr/bin/python3
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+
 """
-Module 0-prime_game
+Contains method to determine the winner of a game
+of prime numbers.
 """
 
 
-def isPrime(num):
-    """
-    checks if a num
-    is a prime number
-    """
-    if num < 2:
-        return False
-    for i in range(2, num):
-        if (num % i) == 0:
-            return False
-    return True
+def prime_numbers_between(n):
+        """
+            calculate prime numbers between 1 and n
+                Args:
+                        n (int): the number to calculate prime numbers up to
+                            Returns:
+                                    int: the number of prime numbers between 1 and n
+                                        """
+
+                                            prime_numbers = 0
+
+                                                for i in range(2, n + 1):
+                                                            is_prime = True
+                                                                    for j in range(2, i // 2 + 1):
+                                                                                    if i % j == 0:
+                                                                                                        is_prime = False
+                                                                                                                        break
+                                                                                                                            if is_prime:
+                                                                                                                                            prime_numbers += 1
+                                                                                                                                                return prime_numbers
 
 
-def getPrime(ints):
-    """
-    Returns a prime number
-    from a set
-    """
-    for n in ints:
-        if isPrime(n):
-            return n
-    return None
+                                                                                                                                            def isWinner(x, nums):
+                                                                                                                                                    """
+                                                                                                                                                        Determines the winner of a game of prime numbers.
+                                                                                                                                                            Args:
+                                                                                                                                                                    x (int): the number of rounds to play
+                                                                                                                                                                            nums (list): the list of numbers n to play
+                                                                                                                                                                                Returns:
+                                                                                                                                                                                        string: the winner of the game (Ben or Maria)
+                                                                                                                                                                                            """
 
+                                                                                                                                                                                                if not x or not nums:
+                                                                                                                                                                                                            return None
+                                                                                                                                                                                                            ben = 0
+                                                                                                                                                                                                                maria = 0
+                                                                                                                                                                                                                    for i in range(x):
+                                                                                                                                                                                                                                prime_nums = prime_numbers_between(nums[i])
+                                                                                                                                                                                                                                        if prime_nums % 2 == 0:
+                                                                                                                                                                                                                                                        ben += 1
+                                                                                                                                                                                                                                                                else:
+                                                                                                                                                                                                                                                                                maria += 1
+                                                                                                                                                                                                                                                                                    if ben == maria:
+                                                                                                                                                                                                                                                                                                return None
+                                                                                                                                                                                                                                                                                                winner = ('Ben' if ben > maria else 'Maria')
+                                                                                                                                                                                                                                                                                                    return winner
 
-def removePrimeNo(ints, prime):
-    """
-    removes a prime number from a set
-    """
-    ints.remove(prime)
-
-
-def removeMultiples(ints, number, player):
-    """removes multiples of a number"""
-    for x in ints.copy():
-        if (x % number) == 0:
-            # print(f"{player} removes {x}")
-            ints.remove(x)
-
-
-def isWinner(x, nums):
-    """
-    Determines the winner
-    """
-    m_wins = 0
-    b_wins = 0
-    canPlay = True
-    times = 0
-
-    if not x or not nums:
-        return None
-
-    for n in nums:
-        ints = set([n for n in range(1, n + 1)])
-        player = "m"
-        while times <= x:
-            prime = getPrime(ints)
-            # A win for the other player
-            # when no more prime numbers exist
-            # print(f"{player} picks {prime}")
-            if prime is None:
-                if player == "m":
-                    b_wins += 1
-                else:
-                    m_wins += 1
-                break
-            # remove prime number
-            # print(f"{player} removes {prime}")
-            removePrimeNo(ints, prime)
-            removeMultiples(ints, prime, player)
-
-            if player == "b":
-                player = "m"
-            else:
-                player = "b"
-            times += 1
-        times = 0
-
-    if m_wins == b_wins:
-        return None
-    return "Maria" if m_wins > b_wins else "Ben"
